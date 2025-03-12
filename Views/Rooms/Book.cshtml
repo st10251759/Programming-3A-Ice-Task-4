@@ -1,0 +1,571 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.BookingViewModel
+
+@{
+    ViewData["Title"] = "Book Room";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Book Your Stay</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Rooms" asp-action="Index">Rooms</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Book</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Booking Form Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Booking Details</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Book" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="Booking.RoomId" />
+                        
+                        <!-- Step Indicator -->
+                        <div class="booking-steps mb-4">
+                            <div class="step active" id="step1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">Dates</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step" id="step2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">Guest Details</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step" id="step3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">Confirmation</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 1: Booking Dates -->
+                        <div class="booking-section" id="section1">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Select Your Stay Dates</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Booking.CheckInDate" class="form-label">Check-in Date</label>
+                                    <input asp-for="Booking.CheckInDate" class="form-control" type="date" id="checkInDate"
+                                           min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="Booking.CheckInDate" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Booking.CheckOutDate" class="form-label">Check-out Date</label>
+                                    <input asp-for="Booking.CheckOutDate" class="form-control" type="date" id="checkOutDate"
+                                           min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="Booking.CheckOutDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mb-4" id="stayDuration">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Stay duration: <span id="nightCount">@((Model.Booking.CheckOutDate - Model.Booking.CheckInDate).Days)</span> night(s)
+                            </div>
+                            
+                            <div class="text-end">
+                                <button type="button" class="btn btn-primary" id="next1">
+                                    Continue <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Guest Information -->
+                        <div class="booking-section d-none" id="section2">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Guest Information</h5>
+                            
+                            <!-- Returning Guest Check -->
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="returningGuest">
+                                    <label class="form-check-label" for="returningGuest">I've stayed here before</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Email Lookup (initially hidden) -->
+                            <div class="mb-4 d-none" id="emailLookupSection">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" id="emailLookup" placeholder="Enter your email address">
+                                    <button class="btn btn-outline-primary" type="button" id="emailLookupBtn">
+                                        <i class="fas fa-search me-1"></i> Find
+                                    </button>
+                                </div>
+                                <div class="form-text">Enter the email you used for previous bookings</div>
+                            </div>
+                            
+                            <!-- Guest Form -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Customer.FirstName" class="form-label">First Name</label>
+                                    <input asp-for="Customer.FirstName" class="form-control" required />
+                                    <span asp-validation-for="Customer.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Customer.LastName" class="form-label">Last Name</label>
+                                    <input asp-for="Customer.LastName" class="form-control" required />
+                                    <span asp-validation-for="Customer.LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Customer.Email" class="form-label">Email Address</label>
+                                <input asp-for="Customer.Email" class="form-control" type="email" required />
+                                <span asp-validation-for="Customer.Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Customer.Phone" class="form-label">Phone Number</label>
+                                <input asp-for="Customer.Phone" class="form-control" id="phoneInput" />
+                                <span asp-validation-for="Customer.Phone" class="text-danger"></span>
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Customer.Address" class="form-label">Address</label>
+                                <textarea asp-for="Customer.Address" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Customer.Address" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary" id="prev2">
+                                    <i class="fas fa-arrow-left me-2"></i> Back
+                                </button>
+                                <button type="button" class="btn btn-primary" id="next2">
+                                    Continue <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Review & Confirm -->
+                        <div class="booking-section d-none" id="section3">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Review Your Booking</h5>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-2">Stay Information</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-calendar-check text-primary me-2"></i>
+                                            <div>
+                                                <div class="small text-muted">Check-in Date</div>
+                                                <div class="fw-semibold" id="reviewCheckIn">@Model.Booking.CheckInDate.ToString("dddd, MMM dd, yyyy")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-calendar-times text-primary me-2"></i>
+                                            <div>
+                                                <div class="small text-muted">Check-out Date</div>
+                                                <div class="fw-semibold" id="reviewCheckOut">@Model.Booking.CheckOutDate.ToString("dddd, MMM dd, yyyy")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-2">Guest Information</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="small text-muted">Guest Name</div>
+                                        <div class="fw-semibold" id="reviewName"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="small text-muted">Email Address</div>
+                                        <div class="fw-semibold" id="reviewEmail"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-2">Price Summary</h6>
+                                <div class="price-summary bg-light p-3 rounded">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>@Model.Room.PricePerNight.ToString("C0") x <span id="summaryNights">@((Model.Booking.CheckOutDate - Model.Booking.CheckInDate).Days)</span> night(s)</span>
+                                        <span id="summaryTotal">@Model.Booking.TotalPrice.ToString("C")</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Taxes & fees</span>
+                                        <span>Included</span>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total</span>
+                                        <span id="summaryFinal">@Model.Booking.TotalPrice.ToString("C")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" asp-for="Booking.TotalPrice" id="totalPriceInput" />
+                            <input type="hidden" asp-for="Booking.BookingStatus" value="Confirmed" />
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary" id="prev3">
+                                    <i class="fas fa-arrow-left me-2"></i> Back
+                                </button>
+                                <button type="submit" class="btn btn-success" id="confirmButton" disabled>
+                                    <i class="fas fa-check-circle me-2"></i> Confirm Booking
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Room Summary Card -->
+            <div class="card shadow-sm sticky-top mb-4" style="top: 2rem;">
+                <div class="room-img-container">
+                    <img src="/images/room-@(Model.Room.RoomType.ToLower()).jpg" class="card-img-top" alt="@Model.Room.RoomType Room" 
+                         onerror="this.src='/images/room-default.jpg';">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="card-title">@Model.Room.RoomType Room</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Room #@Model.Room.RoomNumber</h6>
+                    <p class="card-text room-description">@Model.Room.Description</p>
+                    
+                    <ul class="list-unstyled room-features mb-3">
+                        <li><i class="fas fa-user-friends text-primary me-2"></i>Max Occupancy: @Model.Room.MaxOccupancy</li>
+                        <li><i class="fas fa-tag text-primary me-2"></i>@Model.Room.PricePerNight.ToString("C")/night</li>
+                    </ul>
+                    
+                    <div class="booking-summary bg-light p-3 rounded">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-calendar-check text-primary me-1"></i> Check-in</span>
+                            <span id="summaryCheckIn">@Model.Booking.CheckInDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span><i class="fas fa-calendar-times text-primary me-1"></i> Check-out</span>
+                            <span id="summaryCheckOut">@Model.Booking.CheckOutDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Need Help Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">Need Help?</h5>
+                    <p class="card-text">Our friendly staff is available 24/7 to assist you with your booking.</p>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-phone-alt text-primary me-3"></i>
+                        <div>
+                            <div class="small text-muted">Call Us</div>
+                            <div class="fw-semibold">+1 (555) 123-4567</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-envelope text-primary me-3"></i>
+                        <div>
+                            <div class="small text-muted">Email Us</div>
+                            <div class="fw-semibold">bookings@azurehorizon.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms & Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms & Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Booking Policy</h6>
+                <p>To secure your reservation, a valid credit card is required at the time of booking. Your card will not be charged until check-in.</p>
+                
+                <h6>Cancellation Policy</h6>
+                <p>Free cancellation up to 24 hours before check-in. Cancellations less than 24 hours before check-in or no-shows may be charged one night's stay.</p>
+                
+                <h6>Check-in & Check-out</h6>
+                <p>Check-in time is from 3:00 PM, and check-out time is until 11:00 AM. Early check-in or late check-out may be available upon request and may incur additional charges.</p>
+                
+                <h6>Special Requests</h6>
+                <p>Special requests cannot be guaranteed and may incur additional charges.</p>
+                
+                <h6>Pet Policy</h6>
+                <p>Pets are allowed in select rooms. Additional fees may apply.</p>
+                
+                <h6>Smoking Policy</h6>
+                <p>All rooms are non-smoking. Smoking in non-smoking areas will result in a cleaning fee.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Card */
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Card Subtitle */
+    .card-subtitle {
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    /* Booking Steps */
+    .booking-steps {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background-color: #e9ecef;
+        color: #6c757d;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .step.active .step-number {
+        background-color: #1a73e8;
+        color: white;
+    }
+
+    .step-connector {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #e9ecef;
+        margin: 0 10px;
+        position: relative;
+        top: -20px;
+        z-index: 0;
+    }
+
+    /* Room Image Container */
+    .room-img-container {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .room-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Room Description */
+    .room-description {
+        height: 60px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    /* Price Summary */
+    .price-summary, .booking-summary {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    /* Form Check Input */
+    .form-check-input:checked {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+    }
+
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Multi-step form navigation
+            $("#next1").click(function() {
+                $("#section1").addClass("d-none");
+                $("#section2").removeClass("d-none");
+                $("#step1").addClass("completed");
+                $("#step2").addClass("active");
+            });
+            
+            $("#prev2").click(function() {
+                $("#section2").addClass("d-none");
+                $("#section1").removeClass("d-none");
+                $("#step2").removeClass("active");
+            });
+            
+            $("#next2").click(function() {
+                // Update review section with entered data
+                $("#reviewName").text($("#Customer_FirstName").val() + " " + $("#Customer_LastName").val());
+                $("#reviewEmail").text($("#Customer_Email").val());
+                
+                $("#section2").addClass("d-none");
+                $("#section3").removeClass("d-none");
+                $("#step2").addClass("completed");
+                $("#step3").addClass("active");
+            });
+            
+            $("#prev3").click(function() {
+                $("#section3").addClass("d-none");
+                $("#section2").removeClass("d-none");
+                $("#step3").removeClass("active");
+            });
+            
+            // Date change handlers
+            $("#checkInDate, #checkOutDate").change(function() {
+                // Ensure checkout is after checkin
+                var checkIn = new Date($("#checkInDate").val());
+                var checkOut = new Date($("#checkOutDate").val());
+                
+                if (checkOut <= checkIn) {
+                    var nextDay = new Date(checkIn);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    $("#checkOutDate").val(nextDay.toISOString().split('T')[0]);
+                    checkOut = nextDay;
+                }
+                
+                // Update minimum date for checkout
+                var minCheckOut = new Date(checkIn);
+                minCheckOut.setDate(minCheckOut.getDate() + 1);
+                $("#checkOutDate").attr("min", minCheckOut.toISOString().split('T')[0]);
+                
+                // Calculate nights and update displays
+                var timeDiff = checkOut.getTime() - checkIn.getTime();
+                var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                $("#nightCount").text(nights);
+                $("#summaryNights").text(nights);
+                
+                // Format dates for display
+                var options = { year: 'numeric', month: 'short', day: 'numeric' };
+                var checkInFormatted = checkIn.toLocaleDateString('en-US', options);
+                var checkOutFormatted = checkOut.toLocaleDateString('en-US', options);
+                
+                $("#summaryCheckIn").text(checkInFormatted);
+                $("#summaryCheckOut").text(checkOutFormatted);
+                
+                // Update review section dates
+                var longOptions = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                $("#reviewCheckIn").text(checkIn.toLocaleDateString('en-US', longOptions));
+                $("#reviewCheckOut").text(checkOut.toLocaleDateString('en-US', longOptions));
+                
+                // Calculate total price
+                var pricePerNight = @Model.Room.PricePerNight;
+                var totalPrice = pricePerNight * nights;
+                
+                $("#summaryTotal").text('$' + totalPrice.toFixed(2));
+                $("#summaryFinal").text('$' + totalPrice.toFixed(2));
+                $("#totalPriceInput").val(totalPrice.toFixed(2));
+            });
+            
+            // Phone number formatter
+            $("#phoneInput").on('input', function() {
+                var input = $(this).val().replace(/\D/g, '');
+                var formatted = '';
+                
+                if (input.length > 0) {
+                    formatted += '(' + input.substring(0, 3);
+                }
+                if (input.length > 3) {
+                    formatted += ') ' + input.substring(3, 6);
+                }
+                if (input.length > 6) {
+                    formatted += '-' + input.substring(6, 10);
+                }
+                
+                $(this).val(formatted);
+            });
+            
+            // Returning guest toggle
+            $("#returningGuest").change(function() {
+                if ($(this).is(":checked")) {
+                    $("#emailLookupSection").removeClass("d-none");
+                } else {
+                    $("#emailLookupSection").addClass("d-none");
+                }
+            });
+            
+            // Email lookup functionality (simulated)
+            $("#emailLookupBtn").click(function() {
+                var email = $("#emailLookup").val();
+                if (email) {
+                    // In a real app, this would make an AJAX call to the server
+                    setTimeout(function() {
+                        // Simulate customer found
+                        if (Math.random() > 0.5) {
+                            $("#Customer_FirstName").val("John");
+                            $("#Customer_LastName").val("Doe");
+                            $("#Customer_Email").val(email);
+                            $("#Customer_Phone").val("(555) 123-4567");
+                            $("#Customer_Address").val("123 Main St, Anytown, CA 12345");
+                            alert("Customer information loaded successfully!");
+                        } else {
+                            alert("No customer found with that email address.");
+                        }
+                    }, 500);
+                }
+            });
+            
+            // Terms agreement enables confirm button
+            $("#agreeTerms").change(function() {
+                $("#confirmButton").prop("disabled", !$(this).is(":checked"));
+            });
+            
+            // Initial calculation of nights and price
+            var checkIn = new Date($("#checkInDate").val());
+            var checkOut = new Date($("#checkOutDate").val());
+            var timeDiff = checkOut.getTime() - checkIn.getTime();
+            var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            $("#nightCount").text(nights);
+            $("#summaryNights").text(nights);
+            
+            var pricePerNight = @Model.Room.PricePerNight;
+            var totalPrice = pricePerNight * nights;
+            
+            $("#summaryTotal").text('$' + totalPrice.toFixed(2));
+            $("#summaryFinal").text('$' + totalPrice.toFixed(2));
+            $("#totalPriceInput").val(totalPrice.toFixed(2));
+        });
+    </script>
+}

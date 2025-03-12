@@ -1,0 +1,324 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Room
+
+@{
+    ViewData["Title"] = "Edit Room";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Edit Room</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Rooms" asp-action="Index">Rooms</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Edit</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Edit Room Details</h4>
+                    <span class="badge bg-primary">Room #@Model.RoomNumber</span>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="RoomId" />
+                        
+                        <!-- Basic Information Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Basic Information</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="RoomNumber" class="form-label">Room Number</label>
+                                    <input asp-for="RoomNumber" class="form-control" />
+                                    <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="RoomType" class="form-label">Room Type</label>
+                                    <select asp-for="RoomType" class="form-select">
+                                        <option value="Standard">Standard</option>
+                                        <option value="Deluxe">Deluxe</option>
+                                        <option value="Suite">Suite</option>
+                                        <option value="Family">Family</option>
+                                    </select>
+                                    <span asp-validation-for="RoomType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Details Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Room Details</h5>
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="MaxOccupancy" class="form-label">Maximum Occupancy</label>
+                                    <div class="input-group">
+                                        <input asp-for="MaxOccupancy" class="form-control" type="number" min="1" max="10" />
+                                        <span class="input-group-text">Guests</span>
+                                    </div>
+                                    <span asp-validation-for="MaxOccupancy" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="PricePerNight" class="form-label">Price Per Night</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="PricePerNight" class="form-control" type="number" min="0.01" step="0.01" />
+                                    </div>
+                                    <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Status Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Availability & Status</h5>
+                            <div class="form-check form-switch">
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" role="switch">
+                                <label asp-for="IsAvailable" class="form-check-label">Room is Available for Booking</label>
+                            </div>
+                            <div class="form-text">Toggle this switch to control the room's availability for new bookings.</div>
+                        </div>
+                        
+                        <!-- Room Booking Status Card (sample data, would be dynamic in real app) -->
+                        <div class="card mb-4 border-0 bg-light">
+                            <div class="card-body">
+                                <h5 class="mb-3">Current Booking Status</h5>
+                                <div class="d-flex justify-content-between">
+                                    <div class="status-info">
+                                        <div class="mb-2">
+                                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                            <span id="bookingStatus">
+                                                @if (Model.IsAvailable)
+                                                {
+                                                    <span class="text-success">Available</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Unavailable</span>
+                                                }
+                                            </span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fas fa-calendar-check text-primary me-2"></i>
+                                            <span id="nextCheckIn">Next check-in: Not booked</span>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-calendar-times text-primary me-2"></i>
+                                            <span id="nextCheckOut">Next check-out: Not booked</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="booking-count">
+                                            <span id="bookingCountNumber">0</span>
+                                            <span class="d-block small text-muted">Active<br>Bookings</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Image Section (placeholder in this example) -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Room Image</h5>
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="room-preview mb-3 mb-md-0">
+                                        <img id="roomImagePreview" src="/images/room-@(Model.RoomType.ToLower()).jpg" class="img-fluid rounded" alt="Room Image" 
+                                            onerror="this.src='/images/room-default.jpg';">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="roomImage" class="form-label">Update Room Image</label>
+                                        <input class="form-control" type="file" id="roomImage" accept="image/*" disabled>
+                                        <div class="form-text">Image upload feature is currently under development.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                                </a>
+                                <a asp-action="Details" asp-route-id="@Model.RoomId" class="btn btn-outline-primary">
+                                    <i class="fas fa-info-circle me-2"></i>View Details
+                                </a>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Maintenance History Card (Example, would be dynamic in real app) -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Maintenance History</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@DateTime.Now.AddDays(-30).ToString("MMM dd, yyyy")</td>
+                                <td>Cleaning</td>
+                                <td>Regular deep cleaning</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>@DateTime.Now.AddDays(-60).ToString("MMM dd, yyyy")</td>
+                                <td>Repair</td>
+                                <td>Fixed bathroom sink</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>@DateTime.Now.AddDays(-90).ToString("MMM dd, yyyy")</td>
+                                <td>Inspection</td>
+                                <td>Annual safety inspection</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="fas fa-plus-circle me-2"></i>Add Maintenance Record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Card */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Card Subtitle */
+    .card-subtitle {
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    /* Room Preview */
+    .room-preview {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Booking Count */
+    .booking-count {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+    }
+
+    #bookingCountNumber {
+        font-size: 24px;
+    }
+
+    /* Input Focus */
+    .form-control:focus, .form-select:focus, .form-check-input:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 0.25rem rgba(26, 115, 232, 0.1);
+    }
+
+    /* Form Check Input */
+    .form-check-input:checked {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+    }
+
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Update room image preview when room type changes
+            $("#RoomType").change(function() {
+                var roomType = $(this).val().toLowerCase();
+                $("#roomImagePreview").attr("src", "/images/room-" + roomType + ".jpg");
+            });
+            
+            // In a real application, you would load booking data via AJAX
+            // This is just for demonstration purposes
+            $.ajax({
+                url: '/api/rooms/bookings',
+                type: 'GET',
+                data: { roomId: @Model.RoomId },
+                success: function(data) {
+                    // This would be implemented in a real application
+                    console.log('Booking data would be loaded here');
+                },
+                error: function() {
+                    // Simulate booking data for demonstration
+                    setTimeout(function() {
+                        if (Math.random() > 0.5) {
+                            $("#bookingStatus").html('<span class="text-warning">Booked</span>');
+                            $("#nextCheckIn").text("Next check-in: " + getRandomFutureDate(7));
+                            $("#nextCheckOut").text("Next check-out: " + getRandomFutureDate(10));
+                            $("#bookingCountNumber").text("1");
+                        }
+                    }, 1000);
+                }
+            });
+            
+            // Helper function to get a random future date for demo
+            function getRandomFutureDate(maxDays) {
+                var date = new Date();
+                date.setDate(date.getDate() + Math.floor(Math.random() * maxDays) + 1);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+        });
+    </script>
+}

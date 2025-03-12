@@ -1,0 +1,415 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Room
+
+@{
+    ViewData["Title"] = "Room Details";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Room Details</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Rooms" asp-action="Index">Rooms</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Details</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between mb-4">
+        <h2 class="section-title mb-0">@Model.RoomType Room - #@Model.RoomNumber</h2>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.RoomId" class="btn btn-primary me-2">
+                <i class="fas fa-edit me-2"></i>Edit
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Room Images Carousel -->
+            <div class="card shadow-sm mb-4">
+                <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="2"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="~/images/room-@(Model.RoomType.ToLower())-1.jpg" class="d-block w-100" alt="@Model.RoomType Room" 
+                                 onerror="this.src='/images/room-@(Model.RoomType.ToLower()).jpg';">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="~/images/room-@(Model.RoomType.ToLower())-2.jpg" class="d-block w-100" alt="@Model.RoomType Room" 
+                                 onerror="this.src='/images/room-@(Model.RoomType.ToLower()).jpg';">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="~/images/room-@(Model.RoomType.ToLower())-3.jpg" class="d-block w-100" alt="@Model.RoomType Room" 
+                                 onerror="this.src='/images/room-@(Model.RoomType.ToLower()).jpg';">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Room Information -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="card-title">Room Description</h4>
+                    <p class="card-text">@Model.Description</p>
+                    
+                    <h5 class="mt-4 mb-3">Room Features</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled feature-list">
+                                <li><i class="fas fa-wifi text-primary me-2"></i>Free High-Speed WiFi</li>
+                                <li><i class="fas fa-tv text-primary me-2"></i>Flat-Screen TV</li>
+                                <li><i class="fas fa-snowflake text-primary me-2"></i>Air Conditioning</li>
+                                <li><i class="fas fa-coffee text-primary me-2"></i>Coffee Maker</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled feature-list">
+                                <li><i class="fas fa-bath text-primary me-2"></i>Private Bathroom</li>
+                                <li><i class="fas fa-utensils text-primary me-2"></i>Mini Refrigerator</li>
+                                <li><i class="fas fa-door-closed text-primary me-2"></i>In-Room Safe</li>
+                                <li><i class="fas fa-concierge-bell text-primary me-2"></i>Room Service</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Room Size and Bed Options</h5>
+                    <div class="room-specs mb-4">
+                        <div class="spec-item">
+                            <i class="fas fa-expand-arrows-alt text-primary"></i>
+                            <span>28-32 m²</span>
+                        </div>
+                        @if (Model.RoomType == "Standard")
+                        {
+                            <div class="spec-item">
+                                <i class="fas fa-bed text-primary"></i>
+                                <span>1 Queen Bed</span>
+                            </div>
+                        }
+                        else if (Model.RoomType == "Deluxe")
+                        {
+                            <div class="spec-item">
+                                <i class="fas fa-bed text-primary"></i>
+                                <span>1 King Bed</span>
+                            </div>
+                        }
+                        else if (Model.RoomType == "Suite")
+                        {
+                            <div class="spec-item">
+                                <i class="fas fa-bed text-primary"></i>
+                                <span>1 King Bed + Sofa Bed</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="spec-item">
+                                <i class="fas fa-bed text-primary"></i>
+                                <span>2 Queen Beds</span>
+                            </div>
+                        }
+                        <div class="spec-item">
+                            <i class="fas fa-user-friends text-primary"></i>
+                            <span>Max @Model.MaxOccupancy Guests</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Policies -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">Room Policies</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-smoking-ban text-danger me-3 fs-4"></i>
+                        <div>
+                            <h6 class="mb-0">Non-Smoking</h6>
+                            <p class="mb-0 small text-muted">This is a non-smoking room</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-clock text-primary me-3 fs-4"></i>
+                        <div>
+                            <h6 class="mb-0">Check-in / Check-out</h6>
+                            <p class="mb-0 small text-muted">Check-in from 3:00 PM, Check-out until 11:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-paw text-primary me-3 fs-4"></i>
+                        <div>
+                            <h6 class="mb-0">Pet Policy</h6>
+                            <p class="mb-0 small text-muted">Pets allowed with additional charges (restrictions apply)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Booking Card -->
+            <div class="card shadow-sm sticky-lg-top mb-4" style="top: 2rem; z-index: 999;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Price Details</h4>
+                        @if (Model.IsAvailable)
+                        {
+                            <span class="badge bg-success">Available</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Unavailable</span>
+                        }
+                    </div>
+                    <div class="price-box bg-light p-3 rounded mb-3">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="mb-0">@Model.PricePerNight.ToString("C0")</h5>
+                            <span>per night</span>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="checkInDate" class="form-label">Check-in Date</label>
+                            <input type="date" class="form-control" id="checkInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                                   value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkOutDate" class="form-label">Check-out Date</label>
+                            <input type="date" class="form-control" id="checkOutDate" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" 
+                                   value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="mb-3">
+                            <label for="guestCount" class="form-label">Guests</label>
+                            <select class="form-select" id="guestCount">
+                                @for (int i = 1; i <= Model.MaxOccupancy; i++)
+                                {
+                                    <option value="@i">@i Guest@(i > 1 ? "s" : "")</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="price-summary bg-light p-3 rounded mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>@Model.PricePerNight.ToString("C0") x <span id="nightCount">1</span> night(s)</span>
+                                <span id="totalPrice">@Model.PricePerNight.ToString("C0")</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Taxes & fees</span>
+                                <span>Included</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total</span>
+                                <span id="finalPrice">@Model.PricePerNight.ToString("C0")</span>
+                            </div>
+                        </div>
+                        @if (Model.IsAvailable)
+                        {
+                            <a href="#" id="bookNowBtn" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-calendar-check me-2"></i>Book Now
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary w-100 mb-2" disabled>
+                                <i class="fas fa-calendar-times me-2"></i>Not Available
+                            </button>
+                        }
+                        <p class="text-center text-muted small mb-0">No prepayment needed – pay at the property</p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Room Details Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Room Information</h5>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="fw-semibold">Room Number</span>
+                            <span>@Model.RoomNumber</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="fw-semibold">Room Type</span>
+                            <span>@Model.RoomType</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="fw-semibold">Max Occupancy</span>
+                            <span>@Model.MaxOccupancy Guests</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="fw-semibold">Price Per Night</span>
+                            <span>@Model.PricePerNight.ToString("C0")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="fw-semibold">Status</span>
+                            @if (Model.IsAvailable)
+                            {
+                                <span class="text-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Unavailable</span>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Section Title */
+    .section-title {
+        position: relative;
+        color: #1a73e8;
+        font-weight: 600;
+        padding-bottom: 10px;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #1a73e8;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Card */
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Carousel */
+    .carousel {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .carousel-item img {
+        height: 400px;
+        object-fit: cover;
+    }
+
+    /* Feature List */
+    .feature-list li {
+        margin-bottom: 10px;
+    }
+
+    /* Room Specs */
+    .room-specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .spec-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background-color: #f8f9fa;
+        border-radius: 20px;
+    }
+
+    /* Price Box */
+    .price-box, .price-summary {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Calculate nights and total price
+            function calculatePrice() {
+                var checkIn = new Date($("#checkInDate").val());
+                var checkOut = new Date($("#checkOutDate").val());
+                
+                // Calculate number of nights
+                var timeDiff = checkOut.getTime() - checkIn.getTime();
+                var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                if (nights <= 0) {
+                    nights = 1;
+                    // Set checkout to next day of checkin
+                    checkOut = new Date(checkIn);
+                    checkOut.setDate(checkOut.getDate() + 1);
+                    $("#checkOutDate").val(checkOut.toISOString().split('T')[0]);
+                }
+                
+                $("#nightCount").text(nights);
+                
+                // Calculate total price
+                var pricePerNight = @Html.Raw(Json.Serialize(Model.PricePerNight));
+                var totalPrice = pricePerNight * nights;
+                
+                $("#totalPrice").text('$' + totalPrice.toFixed(2));
+                $("#finalPrice").text('$' + totalPrice.toFixed(2));
+            }
+            
+            // Setup event handlers
+            $("#checkInDate, #checkOutDate").change(function() {
+                // Ensure checkout is after checkin
+                var checkIn = new Date($("#checkInDate").val());
+                var checkOut = new Date($("#checkOutDate").val());
+                
+                if (checkOut <= checkIn) {
+                    var nextDay = new Date(checkIn);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    $("#checkOutDate").val(nextDay.toISOString().split('T')[0]);
+                }
+                
+                calculatePrice();
+            });
+            
+            // Update Book Now button href
+            $("#bookNowBtn").click(function(e) {
+                e.preventDefault();
+                var checkIn = $("#checkInDate").val();
+                var checkOut = $("#checkOutDate").val();
+                var url = '@Url.Action("Book", "Rooms", new { id = Model.RoomId })' + 
+                          '&checkIn=' + checkIn + '&checkOut=' + checkOut;
+                window.location.href = url;
+            });
+            
+            // Initial calculation
+            calculatePrice();
+        });
+    </script>
+}

@@ -1,0 +1,375 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Room
+
+@{
+    ViewData["Title"] = "Add New Room";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Add New Room</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Rooms" asp-action="Index">Rooms</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Create</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Room Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <!-- Basic Information Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Basic Information</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="RoomNumber" class="form-label">Room Number</label>
+                                    <input asp-for="RoomNumber" class="form-control" placeholder="e.g. 101" />
+                                    <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="RoomType" class="form-label">Room Type</label>
+                                    <select asp-for="RoomType" class="form-select">
+                                        <option value="Standard">Standard</option>
+                                        <option value="Deluxe">Deluxe</option>
+                                        <option value="Suite">Suite</option>
+                                        <option value="Family">Family</option>
+                                    </select>
+                                    <span asp-validation-for="RoomType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Details Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Room Details</h5>
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter detailed room description..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="MaxOccupancy" class="form-label">Maximum Occupancy</label>
+                                    <div class="input-group">
+                                        <input asp-for="MaxOccupancy" class="form-control" type="number" min="1" max="10" value="2" />
+                                        <span class="input-group-text">Guests</span>
+                                    </div>
+                                    <span asp-validation-for="MaxOccupancy" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="PricePerNight" class="form-label">Price Per Night</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="PricePerNight" class="form-control" type="number" min="0.01" step="0.01" value="99.99" />
+                                    </div>
+                                    <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Features Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Features & Amenities</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Bed Type</label>
+                                        <select class="form-select" id="bedType">
+                                            <option value="1 Queen Bed">1 Queen Bed</option>
+                                            <option value="1 King Bed">1 King Bed</option>
+                                            <option value="2 Twin Beds">2 Twin Beds</option>
+                                            <option value="2 Queen Beds">2 Queen Beds</option>
+                                            <option value="1 King Bed + Sofa Bed">1 King Bed + Sofa Bed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Room Size</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="roomSize" min="10" value="28" />
+                                            <span class="input-group-text">m²</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label d-block">Room Amenities</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="wifi" checked>
+                                            <label class="form-check-label" for="wifi">WiFi</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="tv" checked>
+                                            <label class="form-check-label" for="tv">TV</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="ac" checked>
+                                            <label class="form-check-label" for="ac">Air Conditioning</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="minibar" checked>
+                                            <label class="form-check-label" for="minibar">Mini Bar</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="safe" checked>
+                                            <label class="form-check-label" for="safe">In-Room Safe</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="coffee" checked>
+                                            <label class="form-check-label" for="coffee">Coffee Maker</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="balcony">
+                                            <label class="form-check-label" for="balcony">Balcony</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="bathtub">
+                                            <label class="form-check-label" for="bathtub">Bathtub</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="roomService" checked>
+                                            <label class="form-check-label" for="roomService">Room Service</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Availability & Status Section -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Availability & Status</h5>
+                            <div class="form-check form-switch">
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" role="switch" checked>
+                                <label asp-for="IsAvailable" class="form-check-label">Room is Available for Booking</label>
+                            </div>
+                            <div class="form-text">Toggle this switch to control the room's availability for new bookings.</div>
+                        </div>
+                        
+                        <!-- Room Images Section (Note: Actual image upload would require additional functionality) -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Room Images</h5>
+                            <div class="mb-3">
+                                <label for="roomImages" class="form-label">Upload Room Images</label>
+                                <input class="form-control" type="file" id="roomImages" multiple accept="image/*" disabled>
+                                <div class="form-text">Image upload feature is currently under development.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Create Room
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Room Type Preview Card (Shown dynamically based on selected room type) -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Room Type Preview</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img id="roomTypePreview" src="/images/room-standard.jpg" class="img-fluid rounded-start h-100 object-fit-cover" alt="Room Preview" 
+                                 onerror="this.src='/images/room-default.jpg';">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title" id="roomTypeTitle">Standard Room</h5>
+                                <p class="card-text" id="roomTypeDescription">
+                                    Our Standard Rooms offer comfortable accommodations for budget-conscious travelers.
+                                    Each room is equipped with modern amenities to ensure a pleasant stay.
+                                </p>
+                                <div class="room-type-specs">
+                                    <div class="spec-item me-3">
+                                        <i class="fas fa-expand-arrows-alt text-primary me-1"></i>
+                                        <span id="roomTypeSizeText">28-32 m²</span>
+                                    </div>
+                                    <div class="spec-item me-3">
+                                        <i class="fas fa-bed text-primary me-1"></i>
+                                        <span id="roomTypeBedText">1 Queen Bed</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-dollar-sign text-primary me-1"></i>
+                                        <span id="roomTypePriceText">$99.99/night</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Card */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Card Subtitle */
+    .card-subtitle {
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    /* Input Focus */
+    .form-control:focus, .form-select:focus, .form-check-input:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 0.25rem rgba(26, 115, 232, 0.1);
+    }
+
+    /* Form Check Input */
+    .form-check-input:checked {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+    }
+
+    /* Room Type Specs */
+    .room-type-specs {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .spec-item {
+        display: flex;
+        align-items: center;
+    }
+
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Initialize the room type preview
+            updateRoomTypePreview();
+            
+            // Update preview when room type changes
+            $("#RoomType").change(function() {
+                updateRoomTypePreview();
+            });
+            
+            // Update preview when price changes
+            $("#PricePerNight").change(function() {
+                updateRoomTypePreview();
+            });
+            
+            // Update preview when bed type changes
+            $("#bedType").change(function() {
+                $("#roomTypeBedText").text($(this).val());
+            });
+            
+            // Update preview when room size changes
+            $("#roomSize").change(function() {
+                var size = $(this).val();
+                $("#roomTypeSizeText").text(size + " m²");
+            });
+            
+            // Function to update the room type preview
+            function updateRoomTypePreview() {
+                var roomType = $("#RoomType").val();
+                var price = $("#PricePerNight").val();
+                
+                $("#roomTypePreview").attr("src", "/images/room-" + roomType.toLowerCase() + ".jpg");
+                $("#roomTypeTitle").text(roomType + " Room");
+                $("#roomTypePriceText").text("$" + price + "/night");
+                
+                // Update bed type based on room type
+                var bedType;
+                switch(roomType) {
+                    case "Standard":
+                        bedType = "1 Queen Bed";
+                        $("#roomTypeDescription").text("Our Standard Rooms offer comfortable accommodations for budget-conscious travelers. Each room is equipped with modern amenities to ensure a pleasant stay.");
+                        $("#bedType").val(bedType);
+                        break;
+                    case "Deluxe":
+                        bedType = "1 King Bed";
+                        $("#roomTypeDescription").text("Our Deluxe Rooms offer spacious comfort with premium amenities and stylish decor. Enjoy a relaxing stay with extra space and upgraded features.");
+                        $("#bedType").val(bedType);
+                        break;
+                    case "Suite":
+                        bedType = "1 King Bed + Sofa Bed";
+                        $("#roomTypeDescription").text("Our luxurious Suites feature a separate living area and bedroom, offering the ultimate in comfort and space. Perfect for extended stays or those seeking extra room to relax.");
+                        $("#bedType").val(bedType);
+                        break;
+                    case "Family":
+                        bedType = "2 Queen Beds";
+                        $("#roomTypeDescription").text("Our Family Rooms are specially designed to accommodate families with children. Spacious and practical with all the amenities needed for a comfortable family stay.");
+                        $("#bedType").val(bedType);
+                        break;
+                }
+                
+                $("#roomTypeBedText").text(bedType);
+            }
+            
+            // Description auto-generator (example feature)
+            $("#generateDescription").click(function(e) {
+                e.preventDefault();
+                var roomType = $("#RoomType").val();
+                var description;
+                
+                switch(roomType) {
+                    case "Standard":
+                        description = "Comfortable Standard Room featuring a queen-sized bed, modern bathroom, and all essential amenities. Perfect for solo travelers or couples looking for quality accommodation at a reasonable price. Includes free WiFi, flat-screen TV, and air conditioning.";
+                        break;
+                    case "Deluxe":
+                        description = "Spacious Deluxe Room with a king-sized bed and premium furnishings. Enjoy the city view from your room while taking advantage of upgraded amenities. Features include a minibar, in-room safe, coffee maker, and luxury bathroom toiletries.";
+                        break;
+                    case "Suite":
+                        description = "Luxurious Suite with separate living area and bedroom for the ultimate comfort. The king-sized bed promises restful sleep, while the spacious living area allows you to relax or work. Complete with panoramic views and premium amenities including a mini kitchen area.";
+                        break;
+                    case "Family":
+                        description = "Spacious Family Room designed with comfort in mind for families with children. Features two queen-sized beds and ample space for everyone. Equipped with all necessary amenities including a refrigerator, TV with children's channels, and family-friendly bathroom facilities.";
+                        break;
+                }
+                
+                $("#Description").val(description);
+            });
+        });
+    </script>
+}
