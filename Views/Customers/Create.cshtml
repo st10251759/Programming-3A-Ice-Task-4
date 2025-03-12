@@ -1,0 +1,191 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Customer
+
+@{
+    ViewData["Title"] = "Add New Customer";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Add New Customer</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Customers" asp-action="Index">Customers</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Create</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Customer Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Personal Details</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FirstName" class="form-label">First Name</label>
+                                    <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="LastName" class="form-label">Last Name</label>
+                                    <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Contact Information</h5>
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input asp-for="Email" class="form-control" placeholder="name@example.com" type="email" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    <input asp-for="Phone" class="form-control" placeholder="(123) 456-7890" />
+                                </div>
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                                <div class="form-text">Optional: Enter a phone number for contact purposes</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Address Information -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Address Information</h5>
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label">Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    <textarea asp-for="Address" class="form-control" rows="3" placeholder="Enter full address"></textarea>
+                                </div>
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                                <div class="form-text">Optional: Enter the full address including street, city, state, and zip code</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preferences (Example of additional fields that could be added) -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Preferences</h5>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="marketingEmails" checked>
+                                    <label class="form-check-label" for="marketingEmails">
+                                        Send promotional emails about special offers
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Room Type</label>
+                                <select class="form-select">
+                                    <option selected value="">No preference</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Deluxe">Deluxe</option>
+                                    <option value="Suite">Suite</option>
+                                </select>
+                                <div class="form-text">This is just for our records and doesn't affect booking options</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Create Customer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Card */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Card Subtitle */
+    .card-subtitle {
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    /* Input Focus */
+    .form-control:focus, .form-select:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 0.25rem rgba(26, 115, 232, 0.1);
+    }
+
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Optional additional script for improved UX
+        $(document).ready(function () {
+            // Automatically focus the first name field when the page loads
+            $('#FirstName').focus();
+            
+            // Example of a simple input formatter for phone numbers
+            $('#Phone').on('input', function () {
+                var input = $(this).val().replace(/\D/g, '');
+                var formatted = '';
+                
+                if (input.length > 0) {
+                    formatted += '(' + input.substring(0, 3);
+                }
+                if (input.length > 3) {
+                    formatted += ') ' + input.substring(3, 6);
+                }
+                if (input.length > 6) {
+                    formatted += '-' + input.substring(6, 10);
+                }
+                
+                $(this).val(formatted);
+            });
+        });
+    </script>
+}

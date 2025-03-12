@@ -1,0 +1,386 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Booking
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Create New Booking</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Bookings" asp-action="Index">Bookings</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Create</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">New Booking Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <!-- Customer Selection -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Guest Information</h5>
+                            <div class="mb-3">
+                                <label asp-for="CustomerId" class="form-label">Guest</label>
+                                <div class="input-group">
+                                    <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.CustomerId">
+                                        <option value="">-- Select Existing Guest --</option>
+                                    </select>
+                                    <button class="btn btn-outline-primary" type="button" id="showNewGuestBtn">
+                                        <i class="fas fa-plus me-1"></i> New Guest
+                                    </button>
+                                </div>
+                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                            </div>
+                            
+                            <!-- New Guest Form (Initially Hidden) -->
+                            <div id="newGuestForm" class="card mt-3 mb-3 d-none">
+                                <div class="card-body">
+                                    <h6 class="mb-3">New Guest Details</h6>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="FirstName" />
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="LastName" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="Email" />
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" id="Phone" />
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-outline-secondary me-2" id="cancelNewGuestBtn">
+                                            Cancel
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="saveNewGuestBtn">
+                                            <i class="fas fa-save me-1"></i> Save Guest
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room Selection -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Room Selection</h5>
+                            <div class="mb-3">
+                                <label asp-for="RoomId" class="form-label">Room</label>
+                                <select asp-for="RoomId" class="form-select" asp-items="ViewBag.RoomId" id="roomSelect">
+                                    <option value="">-- Select Available Room --</option>
+                                </select>
+                                <span asp-validation-for="RoomId" class="text-danger"></span>
+                            </div>
+                            <div id="roomDetails" class="alert alert-primary d-none">
+                                <div class="d-flex">
+                                    <div class="room-preview me-3">
+                                        <img id="roomImage" src="" alt="Room Preview" class="img-fluid rounded" 
+                                             onerror="this.src='/images/room-default.jpg';">
+                                    </div>
+                                    <div>
+                                        <h6 id="roomType"></h6>
+                                        <p id="roomDescription" class="mb-1"></p>
+                                        <div class="d-flex flex-wrap">
+                                            <div class="me-3">
+                                                <i class="fas fa-user-friends text-primary me-1"></i>
+                                                <span id="roomOccupancy"></span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-dollar-sign text-primary me-1"></i>
+                                                <span id="roomPrice"></span>/night
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stay Dates -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Stay Dates</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="CheckInDate" class="form-label">Check-in Date</label>
+                                        <input asp-for="CheckInDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" type="date" id="checkInDate"
+                                               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="CheckOutDate" class="form-label">Check-out Date</label>
+                                        <input asp-for="CheckOutDate" value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" class="form-control" type="date" id="checkOutDate"
+                                               min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mb-0" id="stayDuration">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Stay duration: <span id="nightCount">1</span> night(s)
+                            </div>
+                        </div>
+
+                        <!-- Booking Status -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Booking Details</h5>
+                            <div class="mb-3">
+                                <label asp-for="BookingStatus" class="form-label">Status</label>
+                                <select asp-for="BookingStatus" class="form-select">
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                                <span asp-validation-for="BookingStatus" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="TotalPrice" class="form-label">Total Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input asp-for="TotalPrice" class="form-control" readonly id="totalPrice" />
+                                </div>
+                                <span asp-validation-for="TotalPrice" class="text-danger"></span>
+                                <div class="form-text">Total price will be calculated automatically based on room rate and stay duration.</div>
+                            </div>
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div class="mb-4">
+                            <h5 class="card-subtitle mb-3 pb-2 border-bottom">Additional Information</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Special Requests (Optional)</label>
+                                <textarea class="form-control" rows="3" id="specialRequests" placeholder="Enter any special requests or requirements..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check-circle me-2"></i>Create Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Card Subtitle */
+    .card-subtitle {
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    /* Room Preview */
+    .room-preview {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    .room-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Store room details for rendering
+        let rooms = [];
+
+        $(document).ready(function () {
+            // Fetch room data from server or simulate here
+            $.ajax({
+                url: '@Url.Action("GetAllRooms", "Api")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    rooms = data;
+                },
+                error: function () {
+                    // Fallback with simulated room data if API is not available
+                    rooms = [
+                        { roomId: 1, roomType: "Standard", description: "Comfortable standard room with queen bed", maxOccupancy: 2, pricePerNight: 99.99 },
+                        { roomId: 2, roomType: "Deluxe", description: "Spacious deluxe room with king bed and city view", maxOccupancy: 2, pricePerNight: 149.99 },
+                        { roomId: 3, roomType: "Suite", description: "Luxury suite with separate living area and panoramic views", maxOccupancy: 4, pricePerNight: 249.99 }
+                    ];
+                },
+                complete: function () {
+                    updateRoomDetails();
+                    calculateTotalPrice();
+                }
+            });
+
+            // Room selection change
+            $('#roomSelect').change(function () {
+                updateRoomDetails();
+                calculateTotalPrice();
+            });
+
+            // Date change handlers
+            $('#checkInDate, #checkOutDate').change(function () {
+                // Ensure checkout is after checkin
+                let checkIn = new Date($('#checkInDate').val());
+                let checkOut = new Date($('#checkOutDate').val());
+                
+                if (checkOut <= checkIn) {
+                    let nextDay = new Date(checkIn);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    $('#checkOutDate').val(nextDay.toISOString().split('T')[0]);
+                }
+                
+                // Update minimum date for checkout
+                let minCheckOut = new Date(checkIn);
+                minCheckOut.setDate(minCheckOut.getDate() + 1);
+                $('#checkOutDate').attr("min", minCheckOut.toISOString().split('T')[0]);
+                
+                calculateTotalPrice();
+            });
+
+            // New guest form toggle
+            $('#showNewGuestBtn').click(function() {
+                $('#newGuestForm').removeClass('d-none');
+                $(this).addClass('d-none');
+            });
+
+            $('#cancelNewGuestBtn').click(function() {
+                $('#newGuestForm').addClass('d-none');
+                $('#showNewGuestBtn').removeClass('d-none');
+            });
+
+            $('#saveNewGuestBtn').click(function() {
+                // In a real application, this would be an AJAX call to save the new guest
+                // For this demo, we'll simulate adding the guest to the dropdown
+                
+                const firstName = $('#FirstName').val();
+                const lastName = $('#LastName').val();
+                const email = $('#Email').val();
+                
+                if (!firstName || !lastName || !email) {
+                    alert('Please fill in the required fields (First Name, Last Name, Email)');
+                    return;
+                }
+                
+                // Generate a temporary ID (in real app this would come from the server)
+                const tempId = 'new_' + new Date().getTime();
+                const fullName = firstName + ' ' + lastName;
+                
+                // Add to dropdown
+                $('#CustomerId').append(new Option(fullName, tempId, true, true));
+                
+                // Hide the form
+                $('#newGuestForm').addClass('d-none');
+                $('#showNewGuestBtn').removeClass('d-none');
+                
+                // Clear the form
+                $('#FirstName, #LastName, #Email, #Phone').val('');
+            });
+        });
+
+        function updateRoomDetails() {
+            const roomId = $('#roomSelect').val();
+            
+            if (!roomId) {
+                $('#roomDetails').addClass('d-none');
+                return;
+            }
+            
+            // Find the room by ID
+            const room = rooms.find(r => r.roomId == roomId);
+            
+            if (!room) {
+                // If we can't find the room in our data, use details from select option text
+                const roomText = $('#roomSelect option:selected').text();
+                $('#roomType').text(roomText);
+                $('#roomDescription').text('Room details unavailable');
+                $('#roomOccupancy').text('N/A');
+                $('#roomPrice').text('N/A');
+            } else {
+                // Set room details using the room data
+                $('#roomType').text(room.roomType + ' Room');
+                $('#roomDescription').text(room.description);
+                $('#roomOccupancy').text('Max ' + room.maxOccupancy + ' guests');
+                $('#roomPrice').text('$' + room.pricePerNight.toFixed(2));
+                $('#roomImage').attr('src', '/images/room-' + room.roomType.toLowerCase() + '.jpg');
+            }
+            
+            $('#roomDetails').removeClass('d-none');
+        }
+
+        function calculateTotalPrice() {
+            let checkIn = new Date($('#checkInDate').val());
+            let checkOut = new Date($('#checkOutDate').val());
+            
+            if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+                return;
+            }
+            
+            // Calculate nights
+            let timeDiff = checkOut.getTime() - checkIn.getTime();
+            let nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            if (nights <= 0) {
+                nights = 1;
+            }
+            
+            $('#nightCount').text(nights);
+            
+            // Get room price
+            const roomId = $('#roomSelect').val();
+            
+            if (!roomId) {
+                return;
+            }
+            
+            // Find the room price
+            let roomPrice = 0;
+            const room = rooms.find(r => r.roomId == roomId);
+            
+            if (room) {
+                roomPrice = room.pricePerNight;
+            }
+            
+            // Calculate total
+            const totalPrice = roomPrice * nights;
+            $('#totalPrice').val(totalPrice.toFixed(2));
+        }
+    </script>
+}

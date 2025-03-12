@@ -1,0 +1,156 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Customer
+
+@{
+    ViewData["Title"] = "Delete Customer";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Delete Customer</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Customers" asp-action="Index">Customers</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Delete</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Warning Card -->
+            <div class="card shadow-lg mb-4">
+                <div class="card-body p-4 text-center">
+                    <div class="warning-icon mb-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 class="text-danger mb-3">Delete Customer</h2>
+                    <p class="mb-0 lead">Are you sure you want to delete this customer?</p>
+                    <p class="text-muted">This action cannot be undone.</p>
+                </div>
+            </div>
+
+            <!-- Validation errors -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mb-4">
+                    <div asp-validation-summary="All" class="mb-0"></div>
+                </div>
+            }
+
+            <!-- Customer Details Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Customer Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Customer ID:</h5>
+                            <p>@Model.CustomerId</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Full Name:</h5>
+                            <p>@Model.FullName</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Email Address:</h5>
+                            <p>@Model.Email</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Phone Number:</h5>
+                            <p>@(string.IsNullOrEmpty(Model.Phone) ? "Not provided" : Model.Phone)</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-0">
+                        <div class="col-md-12">
+                            <h5 class="fw-semibold">Address:</h5>
+                            <p class="mb-0">@(string.IsNullOrEmpty(Model.Address) ? "Not provided" : Model.Address)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Safety Notice -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex">
+                        <div class="safety-icon me-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h5>Data Deletion Notice</h5>
+                            <p class="mb-0">
+                                Deleting this customer will permanently remove all their personal information from our system.
+                                This customer may not be deleted if they have existing bookings in the system.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="CustomerId" />
+                
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Warning Icon */
+    .warning-icon {
+        font-size: 5rem;
+        color: #dc3545;
+    }
+
+    /* Safety Icon */
+    .safety-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f8f9fa;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        padding: 1rem 1.5rem;
+    }
+
+</style>

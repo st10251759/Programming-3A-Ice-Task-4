@@ -1,0 +1,151 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Booking
+
+@{
+    ViewData["Title"] = "Cancel Booking";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Cancel Booking</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Bookings" asp-action="Index">Bookings</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Cancel</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-body p-4 text-center">
+                    <div class="warning-icon mb-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 class="text-danger mb-3">Cancel Booking</h2>
+                    <p class="mb-0 lead">Are you sure you want to cancel this booking?</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Booking Details</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Booking Reference:</h5>
+                            <p class="badge bg-primary fs-6">#@Model.BookingId</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Booking Date:</h5>
+                            <p>@Model.BookingDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Guest Name:</h5>
+                            <p>@Model.Customer.FullName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Contact Email:</h5>
+                            <p>@Model.Customer.Email</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Room:</h5>
+                            <p>@Model.Room.RoomType Room - #@Model.Room.RoomNumber</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Total Price:</h5>
+                            <p class="text-danger fw-bold">@Model.TotalPrice.ToString("C")</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-0">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Stay Period:</h5>
+                            <p>@Model.CheckInDate.ToString("MMM dd, yyyy") - @Model.CheckOutDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold">Duration:</h5>
+                            <p>@((Model.CheckOutDate - Model.CheckInDate).Days) night(s)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Cancellation Policy</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning">
+                        <div class="d-flex">
+                            <i class="fas fa-info-circle fa-2x me-3"></i>
+                            <div>
+                                <h5>Please Read Carefully</h5>
+                                <p class="mb-0">By cancelling this booking, you acknowledge the following:</p>
+                                <ul class="mt-2 mb-0">
+                                    <li>Cancellations made less than 24 hours before check-in may be subject to a cancellation fee.</li>
+                                    <li>Any pre-paid amount will be refunded according to our refund policy.</li>
+                                    <li>The room will be made available for other bookings.</li>
+                                    <li>A cancellation confirmation will be sent to the registered email address.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Cancel" method="post">
+                <input type="hidden" asp-for="BookingId" />
+                
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Details" asp-route-id="@Model.BookingId" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Details
+                    </a>
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-times-circle me-2"></i>Confirm Cancellation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Warning Icon */
+    .warning-icon {
+        font-size: 5rem;
+        color: #dc3545;
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        padding: 1rem 1.5rem;
+    }
+
+</style>

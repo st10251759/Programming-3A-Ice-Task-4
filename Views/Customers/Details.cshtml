@@ -1,0 +1,293 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+    var bookings = ViewBag.Bookings as List<Hotel_Booking_Prog_7311_Ice_Task_4.Models.Booking>;
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Customer Details</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Customers" asp-action="Index">Customers</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Details</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mb-4">
+                <h2 class="section-title mb-0">Customer Profile</h2>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.CustomerId" class="btn btn-primary me-2">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+
+            <!-- Customer Profile Card -->
+            <div class="card customer-profile-card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-4 mb-md-0">
+                            <div class="profile-avatar mx-auto mb-3">
+                                @Model.FirstName[0]@Model.LastName[0]
+                            </div>
+                            <h4 class="mb-1">@Model.FullName</h4>
+                            <p class="text-muted">Customer #@Model.CustomerId</p>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="detail-item">
+                                        <h6 class="detail-label">First Name</h6>
+                                        <p class="detail-value">@Model.FirstName</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="detail-item">
+                                        <h6 class="detail-label">Last Name</h6>
+                                        <p class="detail-value">@Model.LastName</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="detail-item">
+                                        <h6 class="detail-label">Email Address</h6>
+                                        <p class="detail-value">
+                                            <a href="mailto:@Model.Email" class="text-decoration-none">
+                                                <i class="fas fa-envelope text-primary me-2"></i>@Model.Email
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="detail-item">
+                                        <h6 class="detail-label">Phone Number</h6>
+                                        <p class="detail-value">
+                                            @if (!string.IsNullOrEmpty(Model.Phone))
+                                            {
+                                                <a href="tel:@Model.Phone" class="text-decoration-none">
+                                                    <i class="fas fa-phone text-primary me-2"></i>@Model.Phone
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not provided</span>
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="detail-item">
+                                        <h6 class="detail-label">Address</h6>
+                                        <p class="detail-value">
+                                            @if (!string.IsNullOrEmpty(Model.Address))
+                                            {
+                                                <span>
+                                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>@Model.Address
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not provided</span>
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking History Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Booking History</h4>
+                    <div>
+                        <a asp-controller="Bookings" asp-action="Create" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>New Booking
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if (bookings != null && bookings.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover booking-table mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Room</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Nights</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var booking in bookings)
+                                    {
+                                        <tr>
+                                            <td>@booking.BookingId</td>
+                                            <td>
+                                                <span class="fw-semibold">@booking.Room.RoomNumber</span><br>
+                                                <span class="small text-muted">@booking.Room.RoomType</span>
+                                            </td>
+                                            <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@((booking.CheckOutDate - booking.CheckInDate).Days)</td>
+                                            <td class="fw-semibold">@booking.TotalPrice.ToString("C")</td>
+                                            <td>
+                                                @{
+                                                    string statusClass = "bg-secondary";
+                                                    if (booking.BookingStatus == "Confirmed")
+                                                    {
+                                                        statusClass = "bg-success";
+                                                    }
+                                                    else if (booking.BookingStatus == "Pending")
+                                                    {
+                                                        statusClass = "bg-warning text-dark";
+                                                    }
+                                                    else if (booking.BookingStatus == "Cancelled")
+                                                    {
+                                                        statusClass = "bg-danger";
+                                                    }
+                                                }
+                                                <span class="badge @statusClass">@booking.BookingStatus</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a asp-controller="Bookings" asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-outline-primary" title="Details">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
+                                                    <a asp-controller="Bookings" asp-action="Edit" asp-route-id="@booking.BookingId" class="btn btn-outline-primary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-4 text-center">
+                            <div class="empty-state mb-3">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h5>No Booking History</h5>
+                            <p class="text-muted mb-3">This customer hasn't made any bookings yet.</p>
+                            <a asp-controller="Bookings" asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Create First Booking
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Section Title */
+    .section-title {
+        position: relative;
+        color: #1a73e8;
+        font-weight: 600;
+        padding-bottom: 10px;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #1a73e8;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Profile Avatar */
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 48px;
+        margin-bottom: 1rem;
+    }
+
+    /* Detail Item */
+    .detail-label {
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    .detail-value {
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+    /* Cards */
+    .customer-profile-card, .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Booking Table */
+    .booking-table th {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .booking-table tbody tr {
+        transition: all 0.2s;
+    }
+
+    .booking-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Empty State */
+    .empty-state {
+        font-size: 4rem;
+        color: #dee2e6;
+    }
+
+</style>

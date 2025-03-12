@@ -1,0 +1,222 @@
+﻿@model IEnumerable<Hotel_Booking_Prog_7311_Ice_Task_4.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Customers</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Customers</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="section-title mb-0">Customer Directory</h2>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-user-plus me-2"></i>Add New Customer
+            </a>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search customers...">
+                <button class="btn btn-outline-primary" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Cards -->
+    <div class="row" id="customerCards">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 mb-4 customer-card">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar me-3">
+                                @item.FirstName[0]@item.LastName[0]
+                            </div>
+                            <div>
+                                <h5 class="mb-0">@item.FullName</h5>
+                                <small class="text-muted">Customer ID: @item.CustomerId</small>
+                            </div>
+                        </div>
+                        <div class="customer-details">
+                            <div class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span>@item.Email</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(item.Phone))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-phone text-primary me-2"></i>
+                                    <span>@item.Phone</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Address))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span>@item.Address</span>
+                                </div>
+                            }
+                        </div>
+                        <hr class="my-3" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@item.CustomerId" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-info-circle me-1"></i> Details
+                            </a>
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@item.CustomerId" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.CustomerId" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- No Customers Message (hidden by default) -->
+    <div id="noCustomersMessage" class="alert alert-info mt-4 d-none">
+        <div class="d-flex">
+            <i class="fas fa-info-circle fa-2x me-3"></i>
+            <div>
+                <h5>No customers found</h5>
+                <p class="mb-0">There are no customers matching your search criteria.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- List View Toggle -->
+    <div class="position-fixed bottom-0 end-0 mb-4 me-4">
+        <button id="viewToggle" class="btn btn-primary rounded-circle shadow" title="Toggle view">
+            <i class="fas fa-list p-1"></i>
+        </button>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Section Title */
+    .section-title {
+        position: relative;
+        color: #1a73e8;
+        font-weight: 600;
+        padding-bottom: 10px;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #1a73e8;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Avatar Circle */
+    .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    /* Customer Cards */
+    .customer-card .card {
+        transition: transform 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .customer-card .card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Table View Styles (initially hidden) */
+    .customer-table {
+        display: none;
+    }
+
+
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Search functionality
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                var visibleCount = 0;
+
+                $(".customer-card").each(function () {
+                    var customerText = $(this).text().toLowerCase();
+                    if (customerText.indexOf(value) > -1) {
+                        $(this).show();
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    $("#noCustomersMessage").removeClass("d-none");
+                } else {
+                    $("#noCustomersMessage").addClass("d-none");
+                }
+            });
+
+            // View toggle functionality - Card view vs List view
+            let isCardView = true;
+            $("#viewToggle").click(function () {
+                isCardView = !isCardView;
+                
+                if (isCardView) {
+                    $("#customerTable").hide();
+                    $("#customerCards").show();
+                    $(this).html('<i class="fas fa-list p-1"></i>');
+                } else {
+                    // For this demo, we'll just alert instead of implementing a full table view
+                    alert("Table view would be implemented here in a real application.");
+                    // Reset to card view
+                    isCardView = true;
+                    $(this).html('<i class="fas fa-list p-1"></i>');
+                }
+            });
+        });
+    </script>
+}

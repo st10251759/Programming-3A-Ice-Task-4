@@ -1,0 +1,262 @@
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<!-- Page Header -->
+<div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 200px">
+        <h1 class="display-4 text-white mb-3 mt-0 mt-lg-5">Booking Details</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white"><a class="text-white" asp-controller="Bookings" asp-action="Index">Bookings</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Details</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Booking ID and Status Bar -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title mb-0">Booking #@Model.BookingId</h2>
+                @{
+                    string statusClass = "bg-secondary";
+                    if (Model.BookingStatus == "Confirmed")
+                    {
+                        statusClass = "bg-success";
+                    }
+                    else if (Model.BookingStatus == "Pending")
+                    {
+                        statusClass = "bg-warning text-dark";
+                    }
+                    else if (Model.BookingStatus == "Cancelled")
+                    {
+                        statusClass = "bg-danger";
+                    }
+                }
+                <span class="badge @statusClass fs-6 px-3 py-2">@Model.BookingStatus</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mb-4">
+                <a asp-action="Edit" asp-route-id="@Model.BookingId" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i>Edit Booking
+                </a>
+                @if (Model.BookingStatus != "Cancelled")
+                {
+                    <a asp-action="Cancel" asp-route-id="@Model.BookingId" class="btn btn-danger">
+                        <i class="fas fa-times-circle me-2"></i>Cancel Booking
+                    </a>
+                }
+                <a asp-action="Index" class="btn btn-outline-secondary ms-auto">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+
+            <!-- Booking Card -->
+            <div class="card booking-card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-0">Booking Information</h5>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <span class="text-muted small">Booked on: @Model.BookingDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Check-in Date</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-check text-primary me-2"></i>
+                                    <span>@Model.CheckInDate.ToString("dddd, MMMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Check-out Date</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-times text-primary me-2"></i>
+                                    <span>@Model.CheckOutDate.ToString("dddd, MMMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Duration</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <span>@((Model.CheckOutDate - Model.CheckInDate).Days) night(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Total Price</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tag text-primary me-2"></i>
+                                    <span class="fs-5 fw-bold">@Model.TotalPrice.ToString("C")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Details Card -->
+            <div class="card room-card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Room Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="room-img-container">
+                                <img src="~/images/room-@(Model.Room.RoomType.ToLower()).jpg" class="img-fluid rounded" alt="Room Image" 
+                                    onerror="this.src='/images/room-default.jpg';">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="mb-2">@Model.Room.RoomType Room - @Model.Room.RoomNumber</h5>
+                            <p>@Model.Room.Description</p>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-user-friends text-primary me-2"></i>
+                                        <span>Max Occupancy: @Model.Room.MaxOccupancy</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-dollar-sign text-primary me-2"></i>
+                                        <span>@Model.Room.PricePerNight.ToString("C")/night</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guest Information Card -->
+            <div class="card guest-card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Guest Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Full Name</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user text-primary me-2"></i>
+                                    <span>@Model.Customer.FullName</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-envelope text-primary me-2"></i>
+                                    <span>@Model.Customer.Email</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Phone</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone text-primary me-2"></i>
+                                    <span>@(string.IsNullOrEmpty(Model.Customer.Phone) ? "Not provided" : Model.Customer.Phone)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Address</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span>@(string.IsNullOrEmpty(Model.Customer.Address) ? "Not provided" : Model.Customer.Address)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/header-bg.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    /* Section Title */
+    .section-title {
+        position: relative;
+        color: #1a73e8;
+        font-weight: 600;
+        padding-bottom: 10px;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #1a73e8;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Cards */
+    .booking-card, .room-card, .guest-card {
+        border-radius: 8px;
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        padding: 1rem 1.5rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Room Image Container */
+    .room-img-container {
+        border-radius: 8px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .room-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+</style>
