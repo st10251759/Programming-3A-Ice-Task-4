@@ -1,8 +1,208 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Hotel_Booking_Prog_7311_Ice_Task_4.Models.RoomSearchViewModel
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="jumbotron text-center bg-image" style="background-image: url('/img/hotel-banner.jpg'); background-size: cover; color: white;">
+    <div style="background-color: rgba(0,0,0,0.4); position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+    <div style="position: relative; z-index: 2;">
+        <h1 class="display-4 fw-bold">Welcome to Azure Horizon Hotel</h1>
+        <p class="lead">Experience luxury and comfort at its finest</p>
+    </div>
 </div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card search-box">
+                <div class="card-body">
+                    <h4 class="mb-4 text-center fw-bold">Find Your Perfect Room</h4>
+                    <form asp-action="SearchRooms" asp-controller="Home" method="post">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="CheckInDate" class="form-label">Check-in Date</label>
+                                    <input asp-for="CheckInDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="CheckOutDate" class="form-label">Check-out Date</label>
+                                    <input asp-for="CheckOutDate" class="form-control" type="date" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="Guests" class="form-label">Number of Guests</label>
+                                    <input asp-for="Guests" class="form-control" type="number" min="1" max="10" />
+                                    <span asp-validation-for="Guests" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i> Check Availability
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.AvailableRooms != null && Model.AvailableRooms.Any())
+    {
+        <div class="mt-5">
+            <h2 class="text-center mb-4 fw-bold">Available Rooms</h2>
+            <div class="row">
+                @foreach (var room in Model.AvailableRooms)
+                {
+                    <div class="col-md-4 mb-4 animate-fade-in-up">
+                        <div class="card h-100">
+                            <img src="~/img/room-@(room.RoomType.ToLower()).jpg" class="card-img-top" alt="@room.RoomType Room" onerror="this.src='/img/room-default.jpg'">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@room.RoomType Room</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Room #@room.RoomNumber</h6>
+                                <p class="card-text">@room.Description</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item px-0">
+                                        <i class="fas fa-user-friends me-2 text-primary"></i> Max Occupancy: @room.MaxOccupancy
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        <i class="fas fa-tag me-2 text-primary"></i> Price: @room.PricePerNight.ToString("C")/night
+                                    </li>
+                                </ul>
+                                <a href="@Url.Action("Book", "Rooms", new { id = room.RoomId, checkIn = Model.CheckInDate, checkOut = Model.CheckOutDate })"
+                                   class="btn btn-primary w-100">
+                                    <i class="fas fa-calendar-check me-2"></i> Book Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else if (Model.AvailableRooms != null)
+    {
+        <div class="alert alert-info mt-5 p-4 text-center">
+            <i class="fas fa-info-circle fa-2x mb-3 text-primary"></i>
+            <h4>No rooms available for your selected dates</h4>
+            <p class="mb-0">Please try different dates or contact us for assistance.</p>
+        </div>
+    }
+
+    <div class="row mt-5 pt-4">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4 fw-bold">Why Choose Azure Horizon Hotel?</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center h-100">
+                <div class="card-body feature-box">
+                    <span class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <h5 class="card-title fw-bold">Luxury Experience</h5>
+                    <p class="card-text">Enjoy 5-star amenities and services throughout your stay with us.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center h-100">
+                <div class="card-body feature-box">
+                    <span class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </span>
+                    <h5 class="card-title fw-bold">Prime Location</h5>
+                    <p class="card-text">Located in the heart of the city with easy access to major attractions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center h-100">
+                <div class="card-body feature-box">
+                    <span class="feature-icon">
+                        <i class="fas fa-concierge-bell"></i>
+                    </span>
+                    <h5 class="card-title fw-bold">Exceptional Service</h5>
+                    <p class="card-text">Our dedicated staff ensures your stay is comfortable and memorable.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title fw-bold">Guest Reviews</h4>
+                    <div class="mb-4">
+                        <p class="fst-italic">"The room was impeccable, and the service was outstanding. One of the best hotel experiences I've had."</p>
+                        <p class="fw-bold mb-0">- Sarah J.</p>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="fst-italic">"Perfect location, luxurious rooms, and very attentive staff. Will definitely stay here again!"</p>
+                        <p class="fw-bold mb-0">- Michael T.</p>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title fw-bold">Special Offers</h4>
+                    <div class="alert alert-success mb-3">
+                        <h5 class="alert-heading"><i class="fas fa-gift me-2"></i> Weekend Getaway Package</h5>
+                        <p>Book a 2-night weekend stay and get 15% off plus complimentary breakfast.</p>
+                    </div>
+                    <div class="alert alert-primary">
+                        <h5 class="alert-heading"><i class="fas fa-calendar-alt me-2"></i> Extended Stay Discount</h5>
+                        <p>Stay for 5 nights or more and enjoy a 20% discount on your entire booking.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            // Ensure checkout date is after checkin date
+            $("#CheckInDate").change(function () {
+                var checkInDate = new Date($(this).val());
+                var checkOutDate = new Date($("#CheckOutDate").val());
+
+                if (checkOutDate <= checkInDate) {
+                    var nextDay = new Date(checkInDate);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    var formattedDate = nextDay.toISOString().split('T')[0];
+                    $("#CheckOutDate").val(formattedDate);
+                }
+
+                // Update min date for checkout
+                $("#CheckOutDate").attr("min", checkInDate.toISOString().split('T')[0]);
+            });
+        });
+    </script>
+}
