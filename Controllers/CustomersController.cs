@@ -28,20 +28,17 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
             {
                 return BadRequest();
             }
-
             var customer = _db.Customers.Find(id);
             if (customer == null)
             {
                 return NotFound();
             }
-
             // Get all bookings for this customer
             var bookings = _db.Bookings
                 .Include(b => b.Room)
                 .Where(b => b.CustomerId == id)
                 .OrderByDescending(b => b.BookingDate)
                 .ToList();
-
             ViewBag.Bookings = bookings;
             return View(customer);
         }
@@ -59,10 +56,22 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Customers.Add(customer);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    _db.Customers.Add(customer);
+                    _db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                    // For debugging
+                    Console.WriteLine(ex.Message);
+                }
             }
+
+            // If we got this far, something failed, redisplay form
             return View(customer);
         }
 
@@ -73,13 +82,11 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
             {
                 return BadRequest();
             }
-
             var customer = _db.Customers.Find(id);
             if (customer == null)
             {
                 return NotFound();
             }
-
             return View(customer);
         }
 
@@ -90,9 +97,19 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Entry(customer).State = EntityState.Modified;
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    _db.Entry(customer).State = EntityState.Modified;
+                    _db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                    // For debugging
+                    Console.WriteLine(ex.Message);
+                }
             }
             return View(customer);
         }
@@ -104,13 +121,11 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
             {
                 return BadRequest();
             }
-
             var customer = _db.Customers.Find(id);
             if (customer == null)
             {
                 return NotFound();
             }
-
             return View(customer);
         }
 
@@ -119,19 +134,37 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var customer = _db.Customers.Find(id);
-
-            // Check if customer has bookings
-            var hasBookings = _db.Bookings.Any(b => b.CustomerId == id);
-            if (hasBookings)
+            try
             {
-                ModelState.AddModelError("", "Cannot delete customer with existing bookings");
+                var customer = _db.Customers.Find(id);
+                if (customer == null)
+                {
+                    return NotFound();
+                }
+
+                // Check if customer has bookings
+                var hasBookings = _db.Bookings.Any(b => b.CustomerId == id);
+                if (hasBookings)
+                {
+                    ModelState.AddModelError("", "Cannot delete customer with existing bookings");
+                    return View(customer);
+                }
+
+                _db.Customers.Remove(customer);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                ModelState.AddModelError("", "Unable to delete customer. Try again, and if the problem persists, see your system administrator.");
+                // For debugging
+                Console.WriteLine(ex.Message);
+
+                // Refetch the customer to pass back to the view
+                var customer = _db.Customers.Find(id);
                 return View(customer);
             }
-
-            _db.Customers.Remove(customer);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
         }
     }
 }

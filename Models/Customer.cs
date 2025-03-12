@@ -24,10 +24,10 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Models
 
         [Phone]
         [Display(Name = "Phone Number")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; } // Made nullable
 
         [Display(Name = "Address")]
-        public string Address { get; set; }
+        public string? Address { get; set; } // Made nullable
 
         // Calculated property
         [NotMapped]
@@ -35,6 +35,6 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4.Models
         public string FullName => $"{FirstName} {LastName}";
 
         // Navigation property
-        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Booking>? Bookings { get; set; }
     }
 }

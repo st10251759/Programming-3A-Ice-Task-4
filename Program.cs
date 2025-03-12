@@ -12,17 +12,24 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            //Adding DB Context builder services with options with roles
+            // Adding DB Context with SQL Server connection
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                       options.UseSqlServer(builder.Configuration.GetConnectionString("Prog7311DEV")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Prog7311DEV"),
+                    sqlOptions => sqlOptions.MigrationsAssembly("Hotel_Booking_Prog_7311_Ice_Task_4")));
+
+            // If you have authentication, add it here
+            // builder.Services.AddAuthentication().AddCookie(options => { ... });
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();  // Show detailed errors in development
+            }
+            else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -30,6 +37,9 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // If you're using authentication, make sure this line comes before Authorization
+            // app.UseAuthentication();  
 
             app.UseAuthorization();
 
