@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Hotel_Booking_Prog_7311_Ice_Task_4.Data;
+
 namespace Hotel_Booking_Prog_7311_Ice_Task_4
 {
     public class Program
@@ -8,6 +11,10 @@ namespace Hotel_Booking_Prog_7311_Ice_Task_4
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Adding DB Context builder services with options with roles
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                       options.UseSqlServer(builder.Configuration.GetConnectionString("Prog7311DEV")));
 
             var app = builder.Build();
 
